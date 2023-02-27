@@ -1,13 +1,13 @@
 package com.example.dacontactsyncandroid.Activity
 
 class Address {
-    var poBox: String? = null
-    var street: String? = null
-    var city: String? = null
-    var state: String? = null
-    var postalCode: String? = null
-    var country: String? = null
-    var type: String? = null
+    var poBox: String? =""
+    var street: String? = ""
+    var city: String? = ""
+    var state: String? = ""
+    var postalCode: String? = ""
+    var country: String? = ""
+    var type: String? = ""
     private var asString = ""
     override fun toString(): String {
         return if (asString.length > 0) {

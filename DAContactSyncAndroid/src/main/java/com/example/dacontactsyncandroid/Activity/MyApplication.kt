@@ -11,22 +11,31 @@ import android.os.Build
 import android.os.Handler
 import android.provider.ContactsContract
 import android.util.Log
+import com.example.dacontactsyncandroid.Activity.EabProvider.EabContactSyncController
 import com.example.dacontactsyncandroid.Activity.service.ContactService
 
 
-class MyApplication : Application() {
+open class MyApplication : Application() {
     private var mContactCount = 0
+    //var mEabContactSyncController:EabContactSyncController ?=null
     val WHERE_MODIFIED1 = "( " + ContactsContract.RawContacts.DELETED + "=1)"
     var listContacts: java.util.ArrayList<Contact>? = null
+    private val NOT_INIT_LAST_UPDATED_TIME = -1
+    private val LAST_UPDATED_TIME_KEY = "eab_last_updated_time"
+    private var mRefreshContactList: List<Uri>? = null
     override fun onCreate() {
         super.onCreate()
         Log.d("TAG", "overviewService: MyApplication")
       //  listContacts=Preference.readArraylist(this@MyApplication)
+      //  mEabContactSyncController =EabContactSyncController()
         if (this.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED){
             mContactCount = getContactCount()
             this.contentResolver.registerContentObserver(
-                ContactsContract.Contacts.CONTENT_URI, true, mObserver
+                ContactsContract.Contacts.CONTENT_URI,
+                true,
+                mObserver
             )
+
         }
 
        // readContacts()
@@ -51,6 +60,11 @@ class MyApplication : Application() {
     }
 
     private val mObserver: ContentObserver = object : ContentObserver(Handler()) {
+     /*   override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+           // mRefreshContactList = mEabContactSyncController!!.syncContactToEabProvider(this@MyApplication)
+            Log.e("TAG", "onChange:checkdata vff     "+mRefreshContactList!!.size )
+        }*/
         override fun onChange(selfChange: Boolean, uri: Uri?, flags: Int) {
             super.onChange(selfChange, uri, flags)
 
@@ -58,40 +72,23 @@ class MyApplication : Application() {
             if (currentCount < mContactCount) {
                // contactDelete()
                 Log.d("TAG", "overviewService: DELETE HAPPEN")
-
-                // DELETE HAPPEN.
+            // DELETE HAPPEN.
             } else if (currentCount == mContactCount) {
                 Log.d("TAG", "overviewService: UPDATE HAPPEN")
                 // UPDATE HAPPEN.
             } else {
                 Log.d("TAG", "overviewService: INSERT HAPPEN")
                 // INSERT HAPPEN.
-                contactAdded(selfChange)
+              //  contactAdded(selfChange)
             }
             mContactCount = currentCount
         }
 
     }
+
+
     fun hasHoneycomb(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-    }
-    fun readContacts() {
-        val CONTACT_LAST_UPDATED_TIMESTAMP =
-            ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP
-
-        val selection = ContactsContract.DeletedContacts.CONTACT_DELETED_TIMESTAMP + " > ?"
-        val selectionArgs = arrayOf<String>(java.lang.String.valueOf(CONTACT_LAST_UPDATED_TIMESTAMP))
-        val cursor: Cursor = getContentResolver().query(
-            ContactsContract.DeletedContacts.CONTENT_URI,
-            null,
-            selection,
-            selectionArgs,
-            null
-        )!!
-        if (cursor!!.count > 0){
-
-        }
-
     }
  /*   fun contactDelete() {
         val cr = contentResolver

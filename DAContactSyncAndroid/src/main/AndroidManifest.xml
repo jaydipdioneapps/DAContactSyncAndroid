@@ -8,6 +8,7 @@
         <activity
             android:name=".Activity.PermissionUtil.PermissionsActivity"
             android:theme="@style/Theme.Transparent" />
+
         <!--    <service
                 android:name=".Activity.service.ContactService"
                 android:enabled="true"

@@ -1,5 +1,7 @@
 package com.example.dacontactsyncandroid.Activity
 
+import android.util.Log
+
 class Contact(var id: String, var name: String) {
     var emails: ArrayList<ContactEmail>
     var adress: ArrayList<Address>
@@ -15,7 +17,7 @@ class Contact(var id: String, var name: String) {
         var result = name
         if (numbers.size > 0) {
             val number = numbers[0]
-            result += " (" + number.number + " - " + number.type + ")"
+            result += " (" + number.number + " - " + number.type +" - " + number.countryIsoCode + ")"
         }
         if (emails.size > 0) {
             val email = emails[0]
@@ -56,7 +58,8 @@ class Contact(var id: String, var name: String) {
         adress.add(Address(poBox!!, street!!, city!! , state!! ,postal!!,country!!,type!!))
     }
 
-    fun addNumber(number: String?, type: String?) {
-        numbers.add(ContactPhone(number!!, type!!))
+    fun addNumber(number: String?, type: String?, countryIsoCode: String?) {
+        Log.d("TAG", "matchContactNumbersvff:addNumber   ${countryIsoCode}")
+        numbers.add(ContactPhone(number!!, type!!,countryIsoCode!!))
     }
 }
